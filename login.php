@@ -55,7 +55,7 @@
 				echo "kontrollin sisselogimist ".$email." ja parool ";
 			}
 		
-			if($password_error == "" && $password_error == ""){
+			if($password_error == "" && $email_error == ""){
 				echo "Võib sisse logida! Kasutajanimi on ".$email." ja parool on ".$password;
 				$hash = hash("sha512", $password);
 				
@@ -126,12 +126,24 @@
 					
 				}
 			}
+				if(	$email_add_error == "" && $password_one_error == ""){
+					
+				$hash = hash("sha512", $password_one);
 				
+				echo "Võib kasutajat luua! Kasutajanimi on ".$email_add." ja parool on ".$password_one. " ja räsi on".$hash;
+				
+				$stmt = $mysqli->prepare("INSERT INTO login (email, password, firstname, lastname) VALUES (?,?,?,?)");
+				echo $mysqli->error;
+				echo $stmt->error;
+				$stmt->bind_param("ssss", $create_email, $hash, $firstname, $lastname);
+				$stmt->execute();
+				$stmt->close();
+			}
 		}
 		
 		
 		
-	}
+	
 	
 	// eemaldab tahapahtlikud osad
 	function test_input($data) {
