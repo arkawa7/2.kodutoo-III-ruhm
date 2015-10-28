@@ -55,6 +55,27 @@
 				echo "kontrollin sisselogimist ".$email." ja parool ";
 			}
 		
+			if($password_error == "" && $password_error == ""){
+				echo "Võib sisse logida! Kasutajanimi on ".$email." ja parool on ".$password;
+				$hash = hash("sha512", $password);
+				
+				$stmt = $mysqli->prepare("SELECT id, email FROM login WHERE email=? AND password=?");
+				echo $mysqli->error;
+				$stmt->bind_param("ss", $email, $hash);
+				$stmt->bind_result($id_from_db, $email_from_db);
+				$stmt->execute();
+				if($stmt->fetch()){
+					echo "Email ja parool oiged, kasutaja id=".$id_from_db;
+				}else{
+					echo "Wrong credentials";
+				}
+				
+				$stmt->close();
+			}
+				
+		}
+		
+		
 		
 		
 		// keegi vajutas create nuppu
