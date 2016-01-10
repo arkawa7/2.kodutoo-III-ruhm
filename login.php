@@ -75,34 +75,38 @@
 				
 		}
 		
-		
+	
 		
 		
 		// keegi vajutas create nuppu
-		}elseif(isset($_POST["create"])){
+		elseif(isset($_POST["create"])){
 			
 			echo "vajutas create nuppu!";
 			
 			//valideerimine create user vormile
 			//kontrollin et e-post ei ole tühi
-			if ( empty($_POST["firstname"]) ) {
+			if ( empty($_POST["first_name"]) ) {
 				$first_name_error = "See väli on kohustuslik";
 			}else{
 				$first_name= test_input($_POST["first_name"]);
 			}
 			
-			if ( empty($_POST["lastname"]) ) {
+			if ( empty($_POST["last_name"]) ) {
 				$last_name_error = "See väli on kohustuslik";
 			}else{
 				$last_name = test_input($_POST["last_name"]);
 			}
 			
-			if ( empty($_POST["email_add_email"]) ) {
+			if ( empty($_POST["email_add"]) ) {
 				$email_add_error = "See väli on kohustuslik";
+			}else{
+				$email_add = test_input($_POST["email_add"]);
 			}
 			
 			if ( empty($_POST["email_confirm"]) ) {
-				$email_confirm_error = "See väli on kojustuslik";
+				$email_confirm_error = "See väli on kohustuslik";
+			}else{
+ 				$email_confirm = test_input($_POST["email_confirm"]);
 			}
 			
 			if ( empty($_POST["password_one"]) ) {
@@ -113,6 +117,9 @@
 				
 					$password_one_error = "Peab olema vähemalt 8 tähemärki pikk!";
 					
+				}else{
+ 					$password_one = test_input($_POST["password_one"]);
+					
 				}
 			}
 				
@@ -120,10 +127,12 @@
 				$password_confirm_error = "See väli on kohustuslik";
 			} else {
 				
-				if(strlen($_POST["password_one"]) < 8) { 
+				if(strlen($_POST["password_confirm"]) < 8) { 
 				
 					$password_confirm_error = "Peab olema vähemalt 8 tähemärki pikk!";
 					
+				}else{
+ 					$password_confirm = test_input($_POST["password_confirm"]);
 				}
 			}
 				if(	$email_add_error == "" && $password_one_error == ""){
@@ -132,17 +141,17 @@
 				
 				echo "Võib kasutajat luua! Kasutajanimi on ".$email_add." ja parool on ".$password_one. " ja räsi on".$hash;
 				
-				$stmt = $mysqli->prepare("INSERT INTO login (email, password, firstname, lastname) VALUES (?,?,?,?)");
+				$stmt = $mysqli->prepare("INSERT INTO login (email, password, first_name, last_name) VALUES (?,?,?,?)");
 				echo $mysqli->error;
 				echo $stmt->error;
-				$stmt->bind_param("ssss", $create_email, $hash, $firstname, $lastname);
+				$stmt->bind_param("ssss", $email_add, $hash, $first_name, $last_name);
 				$stmt->execute();
 				$stmt->close();
 			}
 		}
 		
 		
-		
+	}	
 	
 	
 	// eemaldab tahapahtlikud osad
